@@ -4,21 +4,20 @@ import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
-public class SampleFrame extends Frame{
-    SampleFrame(String title){
+class SampleFrame extends Frame {
+    SampleFrame(String title) {
         super(title);
-        MyWindowAdapter adapter=new MyWindowAdapter(this);
-        addWindowListener( adapter);
+        MyWindowAdapter adapter = new MyWindowAdapter(this);
+        addWindowListener(adapter);
     }
 
     @Override
     public void paint(Graphics g) {
-        g.drawString("frame window",10,40);
+        g.drawString("frame window", 10, 40);
     }
-
-    private class MyWindowAdapter extends WindowAdapter{
+}
+    class MyWindowAdapter extends WindowAdapter{
         SampleFrame sampleFrame;
         public MyWindowAdapter(SampleFrame sampleFrame) {
             this.sampleFrame=sampleFrame;
@@ -54,4 +53,3 @@ public class SampleFrame extends Frame{
             g.drawString("applet window",10,20);
         }
     }
-}
