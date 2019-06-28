@@ -38,7 +38,7 @@ class SampleFrame1 extends Frame implements MouseListener, MouseMotionListener {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent eobj) {
         mouseX=10;
         mouseY=54;
         msg="Mouse just entered child.";
@@ -46,7 +46,7 @@ class SampleFrame1 extends Frame implements MouseListener, MouseMotionListener {
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent eobj) {
         mouseX=10;
         mouseY=54;
         msg="Mouse just left child window";
@@ -86,20 +86,20 @@ class MyWindowAdapter1 extends WindowAdapter{
     }
 
     @Override
-    public void windowClosing(WindowEvent e) {
+    public void windowClosing(WindowEvent we) {
         sampleFrame.setVisible(false);
     }
 }
 
 public class WindowEvents extends Applet implements MouseListener, MouseMotionListener {
-    SampleFrame f;
+    SampleFrame1 f;
     String msg="";
     int mouseX=0,mouseY=10;
     int movX=0,movY=0;
 
     @Override
     public void init() {
-        f=new SampleFrame("Handle Mouse Events");
+        f=new SampleFrame1("Handle Mouse Events");
         f.setSize(300,200);
         f.setVisible(true);
         addMouseListener(this);
