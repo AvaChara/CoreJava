@@ -1,5 +1,3 @@
-package twenty_eight;
-
 import java.awt.*;
 
 public class ColumnTransition extends BillTransition {

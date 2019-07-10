@@ -1,5 +1,3 @@
-package twenty_eight;
-
 import java.awt.*;
 import java.awt.image.PixelGrabber;
 import java.net.URL;

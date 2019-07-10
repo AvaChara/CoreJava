@@ -1,6 +1,3 @@
-package twenty_eight;
-
-
 import java.awt.*;
 import java.awt.image.MemoryImageSource;
 import java.util.Hashtable;

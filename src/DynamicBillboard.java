@@ -1,5 +1,3 @@
-package twenty_eight;
-
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -11,23 +9,27 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DynamicBillboard extends Applet implements Runnable{
-    String bgcolor="#ffffff";
-    long delay=5000;
-    int billboard=5;
-    String bill0="timg.jpeg,http://www.baidu.com";
-    String bill1="timg-1.jpeg,http://www.juooo.com";
-    String bill2="timg-2.jpeg,https://www.csdn.net";
-    String bill3="timg-3.jpeg,https://www.douban.com";
-    String bill4="timg-4.jpeg,http://www.poly.com.cn";
+    String bgcolor="#ffffff";//背景
+    long delay=5000;//延迟
+    int billboard=5;//广告数
+
+    String bill0="timg.png,http://www.baidu.com";//image，url
+    String bill1="timg-1.png,http://www.juooo.com";
+    String bill2="timg-2.png,https://www.csdn.net";
+    String bill3="timg-3.png,https://www.douban.com";
+    String bill4="timg-4.png,http://www.poly.com.cn";
+
+    //转换类型
     String transitions="5,ColumnTransition,FadeTransition,TearTransition,SmashTransition,UnrollTransition";
 
-    File file=new File("/Users/vampire/Desktop/CoreJava/src/twenty_eight/");
+//    File file=new File("/Users/vampire/Desktop/CoreJava/src/twenty_eight/");
+    File file=new File("/Users/vampire/Desktop/CoreJava/src/");
 
     BillData[] billboards;
     int current_billboard;
     int next_billboard;
 
-    String[] transiton_classes;
+    String[] transiton_classes=null;
     Thread thread=null;
     Image image=null;
     boolean mouse_inside_applet;
@@ -46,12 +48,18 @@ public class DynamicBillboard extends Applet implements Runnable{
         }
 
         billboards=new BillData[billboard];
-        current_billboard=next_billboard= (int) (Math.random() * billboards.length);//0-4随机数
-        parseBillData();
+
+        //随机数控制当前显示的图片
+        current_billboard=next_billboard= (int) (Math.random() * billboards.length-1);//0-4随机数
+        try {
+            parseBillData();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
-    void parseBillData(){
-        String s = null;
+    void parseBillData() throws MalformedURLException {
+        String s = null;//图片信息
         if (next_billboard==0) {
              s = bill0;
         }
@@ -71,13 +79,9 @@ public class DynamicBillboard extends Applet implements Runnable{
         System.out.println(s);
 
         int field_end=s.indexOf(",");
-        Image new_image = null;
-        try {
-            new_image=getImage(file.toURI().toURL(),s.substring(0,field_end));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-            URL link;
+        String ss=s.substring(0,field_end);
+        Image new_image=getImage(file.toURI().toURL(),ss);
+        URL link;
         try {
             link=new URL(getDocumentBase(),s.substring(field_end+1));
         } catch (MalformedURLException e) {
@@ -95,10 +99,8 @@ public class DynamicBillboard extends Applet implements Runnable{
     }
 
     void finishInit(){
-        if (delay!=1){
-            return;
-        }
-        link_target_frame="_top";
+        link_target_frame="right";
+
         String s=transitions;
         int field_end=s.indexOf(",");
         int trans_count=Integer.parseInt(s.substring(0,field_end));
@@ -132,7 +134,9 @@ public class DynamicBillboard extends Applet implements Runnable{
             thread=new Thread(this);
             thread.start();
         }
+        System.out.println("thread");
     }
+
 
     @Override
     public void stop() {
@@ -147,10 +151,10 @@ public class DynamicBillboard extends Applet implements Runnable{
             try {
                 Thread.sleep(600);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
         finishInit();
+
         addMouseListener(new MyMouseAdapter());
         addMouseMotionListener(new MyMouseMotionAdapter());
 
@@ -162,15 +166,19 @@ public class DynamicBillboard extends Applet implements Runnable{
                 return;
             next_billboard_time=System.currentTimeMillis()+delay;
             current_billboard=next_billboard;
+            System.out.println("current");
             if (++next_billboard>=billboards.length){
                 next_billboard_time=0;
             }
             if (billboards[next_billboard]==null){
-                parseBillData();
+                try {
+                    parseBillData();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
                 try {
                     Thread.sleep(120);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
             int transition_type= (int) (Math.random() * (transiton_classes.length - 1));
@@ -178,8 +186,8 @@ public class DynamicBillboard extends Applet implements Runnable{
                 ++transition_type;
             }
             last_transition_type=transition_type;
-            String trans=transiton_classes[last_transition_type];
             try {
+                String trans=transiton_classes[last_transition_type];
                 transition=(BillTransition) Class.forName(trans).newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -191,7 +199,6 @@ public class DynamicBillboard extends Applet implements Runnable{
                 try {
                     Thread.sleep(next_billboard_time-System.currentTimeMillis());
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -204,7 +211,6 @@ public class DynamicBillboard extends Applet implements Runnable{
                 try {
                     Thread.sleep(transition.delay);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
             image=billboards[next_billboard].image;
@@ -218,7 +224,6 @@ public class DynamicBillboard extends Applet implements Runnable{
             try {
                 Thread.sleep(120);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
